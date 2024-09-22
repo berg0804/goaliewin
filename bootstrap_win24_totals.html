@@ -1,0 +1,170 @@
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+!-- Navbar (Toolbar) -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <a class="navbar-brand" href="bootstrap_impact_totals.html">Goalie Wins</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+             <li class="nav-item">
+                <a class="nav-link" href="">Daily</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="bootstrap_impact_totals.html">Yearly</a>
+            </li>
+            <!-- Dropdown with hover and click functionality -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownHover" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Leaders
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownHover">
+                    <a class="dropdown-item" href="bootstrap_win24_totals.html">2023-24 Wins</a>
+                    <a class="dropdown-item" href="bootstrap_loss24_totals.html">2023-24 Losses</a>
+                    <a class="dropdown-item" href="bootstrap_win23_totals.html">2022-23 Wins</a>
+                    <a class="dropdown-item" href="bootstrap_loss23_totals.html">2022-23 Losses</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+
+<script>
+    $(document).ready(function() {
+        // Initialize DataTables
+        $('.table').DataTable();
+
+        // Ensure dropdown toggles on click and hover
+        $('.nav-item.dropdown').on('mouseenter', function() {
+            $(this).addClass('show');
+            $(this).find('.dropdown-menu').addClass('show');
+        });
+
+        $('.nav-item.dropdown').on('mouseleave', function() {
+            $(this).removeClass('show');
+            $(this).find('.dropdown-menu').removeClass('show');
+        });
+
+        $('.nav-item.dropdown').on('click', function(e) {
+            if (!$(this).hasClass('show')) {
+                $(this).addClass('show');
+                $(this).find('.dropdown-menu').addClass('show');
+            } else {
+                $(this).removeClass('show');
+                $(this).find('.dropdown-menu').removeClass('show');
+            }
+            e.stopPropagation();
+        });
+    });
+</script>
+
+
+<div class="container">
+    <!-- DataTable -->
+    <table border="0" class="dataframe table table-striped table-bordered">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Impact</th>
+      <th>Year</th>
+      <th>Goalie Win</th>
+    </tr>
+    <tr>
+      <th>Goalie</th>
+      <th>Team</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Igor Shesterkin</th>
+      <th>NYR</th>
+      <td>2023-24</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Ilya Sorokin</th>
+      <th>NYI</th>
+      <td>2023-24</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Connor Hellebuyck</th>
+      <th>WPG</th>
+      <td>2023-24</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Jordan  Binnington</th>
+      <th>STL</th>
+      <td>2023-24</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Samuel Ersson</th>
+      <th>PHI</th>
+      <td>2023-24</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>Charlie Lindgren</th>
+      <th>WSH</th>
+      <td>2023-24</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>Petr Mrazek</th>
+      <th>CHI</th>
+      <td>2023-24</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>Connor Ingram</th>
+      <th>ARI</th>
+      <td>2023-24</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>Jacob Markstrom</th>
+      <th>CGY</th>
+      <td>2023-24</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>Darcy Kuemper</th>
+      <th>WSH</th>
+      <td>2023-24</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>Sam Montembeault</th>
+      <th>MTL</th>
+      <td>2023-24</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+
+
+
+
+
+

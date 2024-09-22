@@ -1,0 +1,2502 @@
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+!-- Navbar (Toolbar) -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <a class="navbar-brand" href="bootstrap_impact_totals.html">Goalie Wins</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+             <li class="nav-item">
+                <a class="nav-link" href="">Daily</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="bootstrap_impact_totals.html">Yearly</a>
+            </li>
+            <!-- Dropdown with hover and click functionality -->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownHover" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Leaders
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownHover">
+                    <a class="dropdown-item" href="bootstrap_win24_totals.html">2023-24 Wins</a>
+                    <a class="dropdown-item" href="bootstrap_loss24_totals.html">2023-24 Losses</a>
+                    <a class="dropdown-item" href="bootstrap_win23_totals.html">2022-23 Wins</a>
+                    <a class="dropdown-item" href="bootstrap_loss23_totals.html">2022-23 Losses</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+
+<script>
+    $(document).ready(function() {
+        // Initialize DataTables
+        $('.table').DataTable();
+
+        // Ensure dropdown toggles on click and hover
+        $('.nav-item.dropdown').on('mouseenter', function() {
+            $(this).addClass('show');
+            $(this).find('.dropdown-menu').addClass('show');
+        });
+
+        $('.nav-item.dropdown').on('mouseleave', function() {
+            $(this).removeClass('show');
+            $(this).find('.dropdown-menu').removeClass('show');
+        });
+
+        $('.nav-item.dropdown').on('click', function(e) {
+            if (!$(this).hasClass('show')) {
+                $(this).addClass('show');
+                $(this).find('.dropdown-menu').addClass('show');
+            } else {
+                $(this).removeClass('show');
+                $(this).find('.dropdown-menu').removeClass('show');
+            }
+            e.stopPropagation();
+        });
+    });
+</script>
+
+
+
+<!-- Year Dropdown -->
+<div class="container mt-3">
+    <label for="yearSelect">Select Year:</label>
+    <select id="yearSelect" class="form-control" style="width: 200px;">
+        <option value="">All</option>
+        <option value="2022-23">2022-23</option>
+        <option value="2023-24">2023-24</option>
+        <option value="2024-25">2024-25</option>
+    </select>
+</div>
+<div class="container mt-3">
+    <label for="teamSelect">Select Team:</label>
+    <select id="teamSelect" class="form-control" style="width: 200px;">
+        <option value="">All</option>
+        <option value="ANA">Anaheim</option>
+        <option value="BOS">Boston</option>
+        <option value="BUF">Buffalo</option>        
+        <option value="CGY">Calgary</option>
+        <option value="CAR">Carolina</option>
+        <option value="CHI">Chicago</option>
+        <option value="COL">Colorado</option>
+        <option value="CBJ">Columbus</option>
+        <option value="DAL">Dallas</option>
+        <option value="EDM">Edmonton</option>
+        <option value="FLA">Florida</option>
+        <option value="LAK">Los Angeles</option>
+        <option value="MIN">Minnesota</option>
+        <option value="MTL">Montreal</option>
+        <option value="NSH">Nashville</option>
+        <option value="NJD">New Jersey</option>
+        <option value="NYI">Islanders</option>
+        <option value="NYR">Rangers</option>
+        <option value="OTT">Ottawa</option>
+        <option value="PHI">Philadelphia</option>
+        <option value="PIT">Pittsburgh</option>
+        <option value="SJS">San Jose</option>
+        <option value="SEA">Seattle</option>
+        <option value="STL">St. Louis</option>
+        <option value="TBL">Tampa Bay</option>
+        <option value="TOR">Toronto</option>
+        <option value="ARI","UTA">Utah</option>
+        <option value="VAN">Vancouver</option>
+        <option value="VEG">Vegas</option>
+        <option value="WSH">Washington</option>
+        <option value="WPG">Winnipeg</option>
+        
+
+    </select>
+</div>
+
+
+
+<!-- Initialize DataTables and reload based on selected year -->
+
+<script>
+$(document).ready(function() {
+    var table = $('table').DataTable();
+
+    // Event listener for the year dropdown
+    $('#yearSelect').on('change', function() {
+        var selectedYear = $(this).val();
+
+        // Filter the table data based on the selected year
+        table.search(selectedYear).draw();
+    });
+
+    // Event listener for the team dropdown
+    $('#teamSelect').on('change', function() {
+        var selectedTeam = $(this).val();
+
+        // Filter the table data based on the selected team
+        table.column(1).search(selectedTeam).draw();
+    });
+});
+</script>
+<div class="container">
+    <!-- DataTable -->
+    <table border="0" class="dataframe table table-striped table-bordered">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Impact</th>
+      <th>Year</th>
+      <th>Games</th>
+      <th>Goalie Win</th>
+      <th>Goalie Loss</th>
+      <th>Strong in Loss</th>
+      <th>Bad in Win</th>
+      <th>No Impact</th>
+    </tr>
+    <tr>
+      <th>Goalie</th>
+      <th>Team</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Adin Hill</th>
+      <th>VEG</th>
+      <td>2023-24</td>
+      <td>35</td>
+      <td>4</td>
+      <td>3</td>
+      <td>5</td>
+      <td>7</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>Akira Schmid</th>
+      <th>NJD</th>
+      <td>2023-24</td>
+      <td>19</td>
+      <td>2</td>
+      <td>2</td>
+      <td>7</td>
+      <td>2</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>Alex Lyon</th>
+      <th>DET</th>
+      <td>2023-24</td>
+      <td>44</td>
+      <td>5</td>
+      <td>4</td>
+      <td>7</td>
+      <td>4</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Alex Nedeljkovic</th>
+      <th>PIT</th>
+      <td>2023-24</td>
+      <td>38</td>
+      <td>3</td>
+      <td>5</td>
+      <td>7</td>
+      <td>7</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>Alexandar Georgiev</th>
+      <th>COL</th>
+      <td>2023-24</td>
+      <td>63</td>
+      <td>5</td>
+      <td>4</td>
+      <td>5</td>
+      <td>12</td>
+      <td>37</td>
+    </tr>
+    <tr>
+      <th>Andrei Vasilevskiy</th>
+      <th>TBL</th>
+      <td>2023-24</td>
+      <td>52</td>
+      <td>4</td>
+      <td>3</td>
+      <td>4</td>
+      <td>11</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>Anthony Stolarz</th>
+      <th>FLA</th>
+      <td>2023-24</td>
+      <td>27</td>
+      <td>5</td>
+      <td>2</td>
+      <td>6</td>
+      <td>2</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Anton Forsberg</th>
+      <th>OTT</th>
+      <td>2023-24</td>
+      <td>30</td>
+      <td>3</td>
+      <td>6</td>
+      <td>1</td>
+      <td>2</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>Antti Raanta</th>
+      <th>CAR</th>
+      <td>2023-24</td>
+      <td>24</td>
+      <td>2</td>
+      <td>3</td>
+      <td>3</td>
+      <td>6</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Arturs Silovs</th>
+      <th>VAN</th>
+      <td>2023-24</td>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Arvid Soderblom</th>
+      <th>CHI</th>
+      <td>2023-24</td>
+      <td>32</td>
+      <td>2</td>
+      <td>2</td>
+      <td>6</td>
+      <td>1</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>Cal Petersen</th>
+      <th>PHI</th>
+      <td>2023-24</td>
+      <td>5</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Calvin Pickard</th>
+      <th>EDM</th>
+      <td>2023-24</td>
+      <td>24</td>
+      <td>0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>4</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>Cam Talbot</th>
+      <th>LAK</th>
+      <td>2023-24</td>
+      <td>54</td>
+      <td>5</td>
+      <td>4</td>
+      <td>10</td>
+      <td>4</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>Carter Hart</th>
+      <th>PHI</th>
+      <td>2023-24</td>
+      <td>26</td>
+      <td>2</td>
+      <td>2</td>
+      <td>3</td>
+      <td>2</td>
+      <td>17</td>
+    </tr>
+    <tr>
+      <th>Casey DeSmith</th>
+      <th>VAN</th>
+      <td>2023-24</td>
+      <td>29</td>
+      <td>3</td>
+      <td>7</td>
+      <td>5</td>
+      <td>3</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Cayden Primeau</th>
+      <th>MTL</th>
+      <td>2023-24</td>
+      <td>23</td>
+      <td>3</td>
+      <td>0</td>
+      <td>5</td>
+      <td>0</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>Charlie Lindgren</th>
+      <th>WSH</th>
+      <td>2023-24</td>
+      <td>50</td>
+      <td>8</td>
+      <td>3</td>
+      <td>8</td>
+      <td>2</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>Chris Driedger</th>
+      <th>SEA</th>
+      <td>2023-24</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Connor Hellebuyck</th>
+      <th>WPG</th>
+      <td>2023-24</td>
+      <td>60</td>
+      <td>10</td>
+      <td>1</td>
+      <td>5</td>
+      <td>4</td>
+      <td>40</td>
+    </tr>
+    <tr>
+      <th>Connor Ingram</th>
+      <th>ARI</th>
+      <td>2023-24</td>
+      <td>50</td>
+      <td>7</td>
+      <td>4</td>
+      <td>7</td>
+      <td>3</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>Dan Vladar</th>
+      <th>CGY</th>
+      <td>2023-24</td>
+      <td>20</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>4</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Daniil Tarasov</th>
+      <th>CBJ</th>
+      <td>2023-24</td>
+      <td>24</td>
+      <td>3</td>
+      <td>3</td>
+      <td>5</td>
+      <td>2</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Darcy Kuemper</th>
+      <th>WSH</th>
+      <td>2023-24</td>
+      <td>33</td>
+      <td>6</td>
+      <td>2</td>
+      <td>7</td>
+      <td>4</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>David Rittich</th>
+      <th>LAK</th>
+      <td>2023-24</td>
+      <td>24</td>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>1</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>Devin Cooley</th>
+      <th>SJS</th>
+      <td>2023-24</td>
+      <td>6</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Devon Levi</th>
+      <th>BUF</th>
+      <td>2023-24</td>
+      <td>23</td>
+      <td>2</td>
+      <td>1</td>
+      <td>3</td>
+      <td>3</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>Dustin Wolf</th>
+      <th>CGY</th>
+      <td>2023-24</td>
+      <td>17</td>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>Eric Comrie</th>
+      <th>BUF</th>
+      <td>2023-24</td>
+      <td>10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>Felix Sandstrom</th>
+      <th>PHI</th>
+      <td>2023-24</td>
+      <td>5</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>Filip Gustavsson</th>
+      <th>MIN</th>
+      <td>2023-24</td>
+      <td>45</td>
+      <td>4</td>
+      <td>2</td>
+      <td>7</td>
+      <td>9</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <th>Frederik Andersen</th>
+      <th>CAR</th>
+      <td>2023-24</td>
+      <td>16</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Georgi Romanov</th>
+      <th>SJS</th>
+      <td>2023-24</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Hunter Shepard</th>
+      <th>WSH</th>
+      <td>2023-24</td>
+      <td>4</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Igor Shesterkin</th>
+      <th>NYR</th>
+      <td>2023-24</td>
+      <td>55</td>
+      <td>12</td>
+      <td>1</td>
+      <td>1</td>
+      <td>6</td>
+      <td>35</td>
+    </tr>
+    <tr>
+      <th>Ilya Samsonov</th>
+      <th>TOR</th>
+      <td>2023-24</td>
+      <td>40</td>
+      <td>4</td>
+      <td>6</td>
+      <td>3</td>
+      <td>10</td>
+      <td>17</td>
+    </tr>
+    <tr>
+      <th>Ilya Sorokin</th>
+      <th>NYI</th>
+      <td>2023-24</td>
+      <td>56</td>
+      <td>11</td>
+      <td>9</td>
+      <td>8</td>
+      <td>6</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>Ivan Fedotov</th>
+      <th>PHI</th>
+      <td>2023-24</td>
+      <td>3</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Ivan Prosvetov</th>
+      <th>COL</th>
+      <td>2023-24</td>
+      <td>11</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>Jack Campbell</th>
+      <th>EDM</th>
+      <td>2023-24</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>Jacob Markstrom</th>
+      <th>CGY</th>
+      <td>2023-24</td>
+      <td>48</td>
+      <td>6</td>
+      <td>2</td>
+      <td>10</td>
+      <td>5</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>Jake Allen</th>
+      <th>MTL</th>
+      <td>2023-24</td>
+      <td>21</td>
+      <td>2</td>
+      <td>4</td>
+      <td>5</td>
+      <td>0</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Jake Allen</th>
+      <th>NJD</th>
+      <td>2023-24</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>Jake Oettinger</th>
+      <th>DAL</th>
+      <td>2023-24</td>
+      <td>54</td>
+      <td>4</td>
+      <td>5</td>
+      <td>5</td>
+      <td>12</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>James Reimer</th>
+      <th>DET</th>
+      <td>2023-24</td>
+      <td>25</td>
+      <td>1</td>
+      <td>2</td>
+      <td>6</td>
+      <td>4</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Jeremy Swayman</th>
+      <th>BOS</th>
+      <td>2023-24</td>
+      <td>44</td>
+      <td>5</td>
+      <td>2</td>
+      <td>8</td>
+      <td>6</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <th>Jesper Wallstedt</th>
+      <th>MIN</th>
+      <td>2023-24</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Jet Greaves</th>
+      <th>CBJ</th>
+      <td>2023-24</td>
+      <td>9</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>Jiri Patera</th>
+      <th>VEG</th>
+      <td>2023-24</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Joel Hofer</th>
+      <th>STL</th>
+      <td>2023-24</td>
+      <td>30</td>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>Joey Daccord</th>
+      <th>SEA</th>
+      <td>2023-24</td>
+      <td>50</td>
+      <td>5</td>
+      <td>4</td>
+      <td>15</td>
+      <td>6</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>John Gibson</th>
+      <th>ANA</th>
+      <td>2023-24</td>
+      <td>46</td>
+      <td>1</td>
+      <td>4</td>
+      <td>11</td>
+      <td>3</td>
+      <td>27</td>
+    </tr>
+    <tr>
+      <th>Jonas Johansson</th>
+      <th>TBL</th>
+      <td>2023-24</td>
+      <td>26</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+      <td>3</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>Jonathan Quick</th>
+      <th>NYR</th>
+      <td>2023-24</td>
+      <td>27</td>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>6</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>Joonas Korpisalo</th>
+      <th>OTT</th>
+      <td>2023-24</td>
+      <td>55</td>
+      <td>5</td>
+      <td>6</td>
+      <td>9</td>
+      <td>6</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>Jordan  Binnington</th>
+      <th>STL</th>
+      <td>2023-24</td>
+      <td>57</td>
+      <td>9</td>
+      <td>1</td>
+      <td>10</td>
+      <td>7</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>Joseph Woll</th>
+      <th>TOR</th>
+      <td>2023-24</td>
+      <td>25</td>
+      <td>4</td>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>Justus Annunen</th>
+      <th>COL</th>
+      <td>2023-24</td>
+      <td>14</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Juuse Saros</th>
+      <th>NSH</th>
+      <td>2023-24</td>
+      <td>64</td>
+      <td>6</td>
+      <td>7</td>
+      <td>5</td>
+      <td>8</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>Kaapo Kahkonen</th>
+      <th>NJD</th>
+      <td>2023-24</td>
+      <td>6</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Kaapo Kahkonen</th>
+      <th>SJS</th>
+      <td>2023-24</td>
+      <td>31</td>
+      <td>1</td>
+      <td>5</td>
+      <td>11</td>
+      <td>2</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Karel Vejmelka</th>
+      <th>ARI</th>
+      <td>2023-24</td>
+      <td>38</td>
+      <td>5</td>
+      <td>6</td>
+      <td>5</td>
+      <td>2</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>Kenneth Appleby</th>
+      <th>NYI</th>
+      <td>2023-24</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Kevin Lankinen</th>
+      <th>NSH</th>
+      <td>2023-24</td>
+      <td>24</td>
+      <td>2</td>
+      <td>1</td>
+      <td>6</td>
+      <td>3</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Laurent Brossoit</th>
+      <th>WPG</th>
+      <td>2023-24</td>
+      <td>23</td>
+      <td>3</td>
+      <td>0</td>
+      <td>3</td>
+      <td>4</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>Linus Ullmark</th>
+      <th>BOS</th>
+      <td>2023-24</td>
+      <td>41</td>
+      <td>5</td>
+      <td>3</td>
+      <td>5</td>
+      <td>2</td>
+      <td>26</td>
+    </tr>
+    <tr>
+      <th>Logan Thompson</th>
+      <th>VEG</th>
+      <td>2023-24</td>
+      <td>46</td>
+      <td>4</td>
+      <td>4</td>
+      <td>3</td>
+      <td>6</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>Louis Domingue</th>
+      <th>NYR</th>
+      <td>2023-24</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Lukas Dostal</th>
+      <th>ANA</th>
+      <td>2023-24</td>
+      <td>44</td>
+      <td>5</td>
+      <td>2</td>
+      <td>7</td>
+      <td>4</td>
+      <td>26</td>
+    </tr>
+    <tr>
+      <th>Mackenzie Blackwood</th>
+      <th>SJS</th>
+      <td>2023-24</td>
+      <td>44</td>
+      <td>5</td>
+      <td>2</td>
+      <td>14</td>
+      <td>1</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>Mads Sogaard</th>
+      <th>OTT</th>
+      <td>2023-24</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Magnus Chrona</th>
+      <th>SJS</th>
+      <td>2023-24</td>
+      <td>9</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>Magnus Hellberg</th>
+      <th>PIT</th>
+      <td>2023-24</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Malcolm Subban</th>
+      <th>CBJ</th>
+      <td>2023-24</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Marc-Andre Fleury</th>
+      <th>MIN</th>
+      <td>2023-24</td>
+      <td>40</td>
+      <td>2</td>
+      <td>4</td>
+      <td>5</td>
+      <td>4</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>Martin Jones</th>
+      <th>TOR</th>
+      <td>2023-24</td>
+      <td>22</td>
+      <td>2</td>
+      <td>3</td>
+      <td>3</td>
+      <td>2</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Matt Murray (1998)</th>
+      <th>DAL</th>
+      <td>2023-24</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Matt Tompkins</th>
+      <th>TBL</th>
+      <td>2023-24</td>
+      <td>6</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Matt Villalta</th>
+      <th>ARI</th>
+      <td>2023-24</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Michael Hutchinson</th>
+      <th>DET</th>
+      <td>2023-24</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Nico Daws</th>
+      <th>NJD</th>
+      <td>2023-24</td>
+      <td>21</td>
+      <td>0</td>
+      <td>2</td>
+      <td>4</td>
+      <td>2</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>Petr Mrazek</th>
+      <th>CHI</th>
+      <td>2023-24</td>
+      <td>56</td>
+      <td>7</td>
+      <td>5</td>
+      <td>14</td>
+      <td>6</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Pheonix Copley</th>
+      <th>LAK</th>
+      <td>2023-24</td>
+      <td>8</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Philipp Grubauer</th>
+      <th>SEA</th>
+      <td>2023-24</td>
+      <td>36</td>
+      <td>2</td>
+      <td>4</td>
+      <td>8</td>
+      <td>4</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>Pyotr Kochetkov</th>
+      <th>CAR</th>
+      <td>2023-24</td>
+      <td>42</td>
+      <td>2</td>
+      <td>5</td>
+      <td>4</td>
+      <td>7</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Sam Montembeault</th>
+      <th>MTL</th>
+      <td>2023-24</td>
+      <td>41</td>
+      <td>6</td>
+      <td>7</td>
+      <td>13</td>
+      <td>0</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>Samuel Ersson</th>
+      <th>PHI</th>
+      <td>2023-24</td>
+      <td>51</td>
+      <td>8</td>
+      <td>5</td>
+      <td>6</td>
+      <td>3</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>Scott Wedgewood</th>
+      <th>DAL</th>
+      <td>2023-24</td>
+      <td>32</td>
+      <td>1</td>
+      <td>6</td>
+      <td>4</td>
+      <td>8</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>Semyon Varlamov</th>
+      <th>NYI</th>
+      <td>2023-24</td>
+      <td>28</td>
+      <td>3</td>
+      <td>2</td>
+      <td>5</td>
+      <td>4</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>Sergei Bobrovsky</th>
+      <th>FLA</th>
+      <td>2023-24</td>
+      <td>58</td>
+      <td>5</td>
+      <td>7</td>
+      <td>4</td>
+      <td>8</td>
+      <td>34</td>
+    </tr>
+    <tr>
+      <th>Spencer Martin</th>
+      <th>CAR</th>
+      <td>2023-24</td>
+      <td>6</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Spencer Martin</th>
+      <th>CBJ</th>
+      <td>2023-24</td>
+      <td>13</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>2</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>Stuart Skinner</th>
+      <th>EDM</th>
+      <td>2023-24</td>
+      <td>59</td>
+      <td>4</td>
+      <td>5</td>
+      <td>4</td>
+      <td>9</td>
+      <td>37</td>
+    </tr>
+    <tr>
+      <th>Thatcher Demko</th>
+      <th>VAN</th>
+      <td>2023-24</td>
+      <td>51</td>
+      <td>5</td>
+      <td>2</td>
+      <td>4</td>
+      <td>8</td>
+      <td>32</td>
+    </tr>
+    <tr>
+      <th>Tristan Jarry</th>
+      <th>PIT</th>
+      <td>2023-24</td>
+      <td>51</td>
+      <td>1</td>
+      <td>5</td>
+      <td>12</td>
+      <td>2</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>Ukko-Pekka Luukkonen</th>
+      <th>BUF</th>
+      <td>2023-24</td>
+      <td>54</td>
+      <td>5</td>
+      <td>4</td>
+      <td>11</td>
+      <td>4</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>Ville Husso</th>
+      <th>DET</th>
+      <td>2023-24</td>
+      <td>19</td>
+      <td>1</td>
+      <td>2</td>
+      <td>5</td>
+      <td>5</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>Vitek Vanecek</th>
+      <th>NJD</th>
+      <td>2023-24</td>
+      <td>32</td>
+      <td>1</td>
+      <td>3</td>
+      <td>2</td>
+      <td>8</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>Yaniv Perets</th>
+      <th>CAR</th>
+      <td>2023-24</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Yaroslav Askarov</th>
+      <th>NSH</th>
+      <td>2023-24</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Aaron Dell</th>
+      <th>SJS</th>
+      <td>2022-23</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Adin Hill</th>
+      <th>VEG</th>
+      <td>2022-23</td>
+      <td>27</td>
+      <td>3</td>
+      <td>4</td>
+      <td>2</td>
+      <td>5</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>Akira Schmid</th>
+      <th>NJD</th>
+      <td>2022-23</td>
+      <td>18</td>
+      <td>2</td>
+      <td>2</td>
+      <td>3</td>
+      <td>2</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Alex Lyon</th>
+      <th>FLA</th>
+      <td>2022-23</td>
+      <td>15</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Alex Nedeljkovic</th>
+      <th>DET</th>
+      <td>2022-23</td>
+      <td>15</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+      <td>0</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Alex Stalock</th>
+      <th>CHI</th>
+      <td>2022-23</td>
+      <td>27</td>
+      <td>1</td>
+      <td>2</td>
+      <td>8</td>
+      <td>2</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>Alexandar Georgiev</th>
+      <th>COL</th>
+      <td>2022-23</td>
+      <td>62</td>
+      <td>7</td>
+      <td>4</td>
+      <td>7</td>
+      <td>8</td>
+      <td>36</td>
+    </tr>
+    <tr>
+      <th>Andrei Vasilevskiy</th>
+      <th>TBL</th>
+      <td>2022-23</td>
+      <td>60</td>
+      <td>4</td>
+      <td>6</td>
+      <td>8</td>
+      <td>6</td>
+      <td>36</td>
+    </tr>
+    <tr>
+      <th>Anthony Stolarz</th>
+      <th>ANA</th>
+      <td>2022-23</td>
+      <td>19</td>
+      <td>2</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>Anton Forsberg</th>
+      <th>OTT</th>
+      <td>2022-23</td>
+      <td>28</td>
+      <td>1</td>
+      <td>1</td>
+      <td>7</td>
+      <td>3</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>Anton Khudobin</th>
+      <th>CHI</th>
+      <td>2022-23</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Antti Raanta</th>
+      <th>CAR</th>
+      <td>2022-23</td>
+      <td>27</td>
+      <td>1</td>
+      <td>3</td>
+      <td>1</td>
+      <td>9</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>Arturs Silovs</th>
+      <th>VAN</th>
+      <td>2022-23</td>
+      <td>5</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Arvid Soderblom</th>
+      <th>CHI</th>
+      <td>2022-23</td>
+      <td>15</td>
+      <td>2</td>
+      <td>1</td>
+      <td>6</td>
+      <td>1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>Brian Elliott</th>
+      <th>TBL</th>
+      <td>2022-23</td>
+      <td>22</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>4</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>Cal Petersen</th>
+      <th>LAK</th>
+      <td>2022-23</td>
+      <td>10</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>2</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>Cam Talbot</th>
+      <th>OTT</th>
+      <td>2022-23</td>
+      <td>36</td>
+      <td>5</td>
+      <td>3</td>
+      <td>10</td>
+      <td>6</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Carter Hart</th>
+      <th>PHI</th>
+      <td>2022-23</td>
+      <td>55</td>
+      <td>9</td>
+      <td>3</td>
+      <td>8</td>
+      <td>4</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>Casey DeSmith</th>
+      <th>PIT</th>
+      <td>2022-23</td>
+      <td>38</td>
+      <td>5</td>
+      <td>2</td>
+      <td>9</td>
+      <td>5</td>
+      <td>17</td>
+    </tr>
+    <tr>
+      <th>Cayden Primeau</th>
+      <th>MTL</th>
+      <td>2022-23</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Charlie Lindgren</th>
+      <th>WSH</th>
+      <td>2022-23</td>
+      <td>31</td>
+      <td>0</td>
+      <td>2</td>
+      <td>8</td>
+      <td>4</td>
+      <td>17</td>
+    </tr>
+    <tr>
+      <th>Collin Delia</th>
+      <th>VAN</th>
+      <td>2022-23</td>
+      <td>20</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>Connor Hellebuyck</th>
+      <th>WPG</th>
+      <td>2022-23</td>
+      <td>64</td>
+      <td>11</td>
+      <td>3</td>
+      <td>7</td>
+      <td>6</td>
+      <td>37</td>
+    </tr>
+    <tr>
+      <th>Connor Ingram</th>
+      <th>ARI</th>
+      <td>2022-23</td>
+      <td>27</td>
+      <td>2</td>
+      <td>3</td>
+      <td>10</td>
+      <td>1</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Craig Anderson</th>
+      <th>BUF</th>
+      <td>2022-23</td>
+      <td>26</td>
+      <td>2</td>
+      <td>2</td>
+      <td>6</td>
+      <td>2</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>Dan Vladar</th>
+      <th>CGY</th>
+      <td>2022-23</td>
+      <td>27</td>
+      <td>1</td>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Daniil Tarasov</th>
+      <th>CBJ</th>
+      <td>2022-23</td>
+      <td>17</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Darcy Kuemper</th>
+      <th>WSH</th>
+      <td>2022-23</td>
+      <td>57</td>
+      <td>3</td>
+      <td>2</td>
+      <td>12</td>
+      <td>6</td>
+      <td>34</td>
+    </tr>
+    <tr>
+      <th>David Rittich</th>
+      <th>WPG</th>
+      <td>2022-23</td>
+      <td>21</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>4</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>Devon Levi</th>
+      <th>BUF</th>
+      <td>2022-23</td>
+      <td>7</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Dustin Tokarski</th>
+      <th>PIT</th>
+      <td>2022-23</td>
+      <td>4</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Dustin Wolf</th>
+      <th>CGY</th>
+      <td>2022-23</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Dylan Ferguson</th>
+      <th>OTT</th>
+      <td>2022-23</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Dylan Wells</th>
+      <th>CHI</th>
+      <td>2022-23</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Eetu Makiniemi</th>
+      <th>SJS</th>
+      <td>2022-23</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Elvis Merzlikins</th>
+      <th>CBJ</th>
+      <td>2022-23</td>
+      <td>30</td>
+      <td>0</td>
+      <td>0</td>
+      <td>6</td>
+      <td>5</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>Eric Comrie</th>
+      <th>BUF</th>
+      <td>2022-23</td>
+      <td>19</td>
+      <td>2</td>
+      <td>2</td>
+      <td>3</td>
+      <td>5</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>Erik Kallgren</th>
+      <th>TOR</th>
+      <td>2022-23</td>
+      <td>10</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>Felix Sandstrom</th>
+      <th>PHI</th>
+      <td>2022-23</td>
+      <td>20</td>
+      <td>0</td>
+      <td>5</td>
+      <td>3</td>
+      <td>1</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Filip Gustavsson</th>
+      <th>MIN</th>
+      <td>2022-23</td>
+      <td>39</td>
+      <td>6</td>
+      <td>2</td>
+      <td>6</td>
+      <td>3</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>Frederik Andersen</th>
+      <th>CAR</th>
+      <td>2022-23</td>
+      <td>34</td>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>8</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>Igor Shesterkin</th>
+      <th>NYR</th>
+      <td>2022-23</td>
+      <td>58</td>
+      <td>7</td>
+      <td>1</td>
+      <td>10</td>
+      <td>13</td>
+      <td>27</td>
+    </tr>
+    <tr>
+      <th>Ilya Samsonov</th>
+      <th>TOR</th>
+      <td>2022-23</td>
+      <td>42</td>
+      <td>4</td>
+      <td>1</td>
+      <td>6</td>
+      <td>6</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>Ilya Sorokin</th>
+      <th>NYI</th>
+      <td>2022-23</td>
+      <td>62</td>
+      <td>8</td>
+      <td>6</td>
+      <td>13</td>
+      <td>4</td>
+      <td>31</td>
+    </tr>
+    <tr>
+      <th>Ivan Prosvetov</th>
+      <th>ARI</th>
+      <td>2022-23</td>
+      <td>7</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>Jack Campbell</th>
+      <th>EDM</th>
+      <td>2022-23</td>
+      <td>36</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2</td>
+      <td>11</td>
+      <td>17</td>
+    </tr>
+    <tr>
+      <th>Jacob Markstrom</th>
+      <th>CGY</th>
+      <td>2022-23</td>
+      <td>59</td>
+      <td>4</td>
+      <td>10</td>
+      <td>11</td>
+      <td>12</td>
+      <td>22</td>
+    </tr>
+    <tr>
+      <th>Jake Allen</th>
+      <th>MTL</th>
+      <td>2022-23</td>
+      <td>42</td>
+      <td>4</td>
+      <td>4</td>
+      <td>10</td>
+      <td>6</td>
+      <td>18</td>
+    </tr>
+    <tr>
+      <th>Jake Oettinger</th>
+      <th>DAL</th>
+      <td>2022-23</td>
+      <td>62</td>
+      <td>9</td>
+      <td>9</td>
+      <td>6</td>
+      <td>8</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>James Reimer</th>
+      <th>SJS</th>
+      <td>2022-23</td>
+      <td>43</td>
+      <td>2</td>
+      <td>3</td>
+      <td>10</td>
+      <td>3</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>Jaroslav Halak</th>
+      <th>NYR</th>
+      <td>2022-23</td>
+      <td>25</td>
+      <td>2</td>
+      <td>0</td>
+      <td>5</td>
+      <td>2</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>Jaxson Stauber</th>
+      <th>CHI</th>
+      <td>2022-23</td>
+      <td>6</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>Jeremy Swayman</th>
+      <th>BOS</th>
+      <td>2022-23</td>
+      <td>37</td>
+      <td>3</td>
+      <td>4</td>
+      <td>2</td>
+      <td>4</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Jet Greaves</th>
+      <th>CBJ</th>
+      <td>2022-23</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Jett Alexander</th>
+      <th>TOR</th>
+      <td>2022-23</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Jiri Patera</th>
+      <th>VEG</th>
+      <td>2022-23</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Joel Hofer</th>
+      <th>STL</th>
+      <td>2022-23</td>
+      <td>6</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Joey Daccord</th>
+      <th>SEA</th>
+      <td>2022-23</td>
+      <td>5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>John Gibson</th>
+      <th>ANA</th>
+      <td>2022-23</td>
+      <td>53</td>
+      <td>9</td>
+      <td>6</td>
+      <td>12</td>
+      <td>0</td>
+      <td>26</td>
+    </tr>
+    <tr>
+      <th>Jon Gillies</th>
+      <th>CBJ</th>
+      <td>2022-23</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Jonas Johansson</th>
+      <th>COL</th>
+      <td>2022-23</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Jonathan Quick</th>
+      <th>LAK</th>
+      <td>2022-23</td>
+      <td>31</td>
+      <td>2</td>
+      <td>6</td>
+      <td>4</td>
+      <td>6</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>Jonathan Quick</th>
+      <th>VEG</th>
+      <td>2022-23</td>
+      <td>10</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>Joonas Korpisalo</th>
+      <th>CBJ</th>
+      <td>2022-23</td>
+      <td>28</td>
+      <td>3</td>
+      <td>0</td>
+      <td>7</td>
+      <td>4</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>Joonas Korpisalo</th>
+      <th>LAK</th>
+      <td>2022-23</td>
+      <td>11</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>Jordan  Binnington</th>
+      <th>STL</th>
+      <td>2022-23</td>
+      <td>61</td>
+      <td>6</td>
+      <td>5</td>
+      <td>8</td>
+      <td>6</td>
+      <td>36</td>
+    </tr>
+    <tr>
+      <th>Joseph Woll</th>
+      <th>TOR</th>
+      <td>2022-23</td>
+      <td>7</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>Justus Annunen</th>
+      <th>COL</th>
+      <td>2022-23</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Juuse Saros</th>
+      <th>NSH</th>
+      <td>2022-23</td>
+      <td>64</td>
+      <td>11</td>
+      <td>0</td>
+      <td>17</td>
+      <td>6</td>
+      <td>30</td>
+    </tr>
+    <tr>
+      <th>Kaapo Kahkonen</th>
+      <th>SJS</th>
+      <td>2022-23</td>
+      <td>37</td>
+      <td>0</td>
+      <td>9</td>
+      <td>6</td>
+      <td>2</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>Karel Vejmelka</th>
+      <th>ARI</th>
+      <td>2022-23</td>
+      <td>50</td>
+      <td>7</td>
+      <td>5</td>
+      <td>8</td>
+      <td>3</td>
+      <td>27</td>
+    </tr>
+    <tr>
+      <th>Keith Kinkaid</th>
+      <th>BOS</th>
+      <td>2022-23</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Keith Kinkaid</th>
+      <th>COL</th>
+      <td>2022-23</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Kevin Lankinen</th>
+      <th>NSH</th>
+      <td>2022-23</td>
+      <td>19</td>
+      <td>6</td>
+      <td>1</td>
+      <td>4</td>
+      <td>0</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>Kevin Mandolese</th>
+      <th>OTT</th>
+      <td>2022-23</td>
+      <td>3</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Laurent Brossoit</th>
+      <th>VEG</th>
+      <td>2022-23</td>
+      <td>11</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>Leevi Merilainen</th>
+      <th>OTT</th>
+      <td>2022-23</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Linus Ullmark</th>
+      <th>BOS</th>
+      <td>2022-23</td>
+      <td>49</td>
+      <td>5</td>
+      <td>0</td>
+      <td>4</td>
+      <td>7</td>
+      <td>33</td>
+    </tr>
+    <tr>
+      <th>Logan Thompson</th>
+      <th>VEG</th>
+      <td>2022-23</td>
+      <td>37</td>
+      <td>4</td>
+      <td>1</td>
+      <td>4</td>
+      <td>7</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>Lukas Dostal</th>
+      <th>ANA</th>
+      <td>2022-23</td>
+      <td>19</td>
+      <td>1</td>
+      <td>1</td>
+      <td>7</td>
+      <td>2</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>Mackenzie Blackwood</th>
+      <th>NJD</th>
+      <td>2022-23</td>
+      <td>22</td>
+      <td>2</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Mads Sogaard</th>
+      <th>OTT</th>
+      <td>2022-23</td>
+      <td>19</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>Magnus Hellberg</th>
+      <th>OTT</th>
+      <td>2022-23</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Magnus Hellberg</th>
+      <th>DET</th>
+      <td>2022-23</td>
+      <td>17</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4</td>
+      <td>0</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>Marc-Andre Fleury</th>
+      <th>MIN</th>
+      <td>2022-23</td>
+      <td>46</td>
+      <td>6</td>
+      <td>5</td>
+      <td>8</td>
+      <td>8</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>Martin Jones</th>
+      <th>SEA</th>
+      <td>2022-23</td>
+      <td>48</td>
+      <td>3</td>
+      <td>5</td>
+      <td>2</td>
+      <td>9</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>Matt Murray</th>
+      <th>DAL</th>
+      <td>2022-23</td>
+      <td>3</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Matt Murray</th>
+      <th>TOR</th>
+      <td>2022-23</td>
+      <td>26</td>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>Matthew Berlin</th>
+      <th>EDM</th>
+      <td>2022-23</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Michael Hutchinson</th>
+      <th>CBJ</th>
+      <td>2022-23</td>
+      <td>16</td>
+      <td>1</td>
+      <td>0</td>
+      <td>4</td>
+      <td>1</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>Olle Eriksson Ek</th>
+      <th>ANA</th>
+      <td>2022-23</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Pavel Francouz</th>
+      <th>COL</th>
+      <td>2022-23</td>
+      <td>16</td>
+      <td>2</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>Petr Mrazek</th>
+      <th>CHI</th>
+      <td>2022-23</td>
+      <td>39</td>
+      <td>3</td>
+      <td>3</td>
+      <td>8</td>
+      <td>2</td>
+      <td>23</td>
+    </tr>
+    <tr>
+      <th>Pheonix Copley</th>
+      <th>LAK</th>
+      <td>2022-23</td>
+      <td>37</td>
+      <td>2</td>
+      <td>2</td>
+      <td>4</td>
+      <td>5</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Philipp Grubauer</th>
+      <th>SEA</th>
+      <td>2022-23</td>
+      <td>39</td>
+      <td>1</td>
+      <td>3</td>
+      <td>7</td>
+      <td>4</td>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Pyotr Kochetkov</th>
+      <th>CAR</th>
+      <td>2022-23</td>
+      <td>24</td>
+      <td>4</td>
+      <td>2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>Sam Montembeault</th>
+      <th>MTL</th>
+      <td>2022-23</td>
+      <td>40</td>
+      <td>8</td>
+      <td>3</td>
+      <td>7</td>
+      <td>1</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>Samuel Ersson</th>
+      <th>PHI</th>
+      <td>2022-23</td>
+      <td>12</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>Scott Wedgewood</th>
+      <th>DAL</th>
+      <td>2022-23</td>
+      <td>21</td>
+      <td>0</td>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>Semyon Varlamov</th>
+      <th>NYI</th>
+      <td>2022-23</td>
+      <td>23</td>
+      <td>4</td>
+      <td>1</td>
+      <td>4</td>
+      <td>2</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>Sergei Bobrovsky</th>
+      <th>FLA</th>
+      <td>2022-23</td>
+      <td>50</td>
+      <td>4</td>
+      <td>6</td>
+      <td>7</td>
+      <td>5</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>Spencer Knight</th>
+      <th>FLA</th>
+      <td>2022-23</td>
+      <td>21</td>
+      <td>1</td>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>13</td>
+    </tr>
+    <tr>
+      <th>Spencer Martin</th>
+      <th>VAN</th>
+      <td>2022-23</td>
+      <td>29</td>
+      <td>0</td>
+      <td>3</td>
+      <td>3</td>
+      <td>6</td>
+      <td>17</td>
+    </tr>
+    <tr>
+      <th>Stuart Skinner</th>
+      <th>EDM</th>
+      <td>2022-23</td>
+      <td>50</td>
+      <td>7</td>
+      <td>3</td>
+      <td>9</td>
+      <td>10</td>
+      <td>21</td>
+    </tr>
+    <tr>
+      <th>Thatcher Demko</th>
+      <th>VAN</th>
+      <td>2022-23</td>
+      <td>32</td>
+      <td>5</td>
+      <td>4</td>
+      <td>3</td>
+      <td>4</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>Thomas Greiss</th>
+      <th>STL</th>
+      <td>2022-23</td>
+      <td>21</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>3</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>Tristan Jarry</th>
+      <th>PIT</th>
+      <td>2022-23</td>
+      <td>47</td>
+      <td>3</td>
+      <td>4</td>
+      <td>6</td>
+      <td>6</td>
+      <td>28</td>
+    </tr>
+    <tr>
+      <th>Ukko-Pekka Luukkonen</th>
+      <th>BUF</th>
+      <td>2022-23</td>
+      <td>33</td>
+      <td>2</td>
+      <td>1</td>
+      <td>6</td>
+      <td>9</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>Ville Husso</th>
+      <th>DET</th>
+      <td>2022-23</td>
+      <td>56</td>
+      <td>4</td>
+      <td>5</td>
+      <td>4</td>
+      <td>8</td>
+      <td>35</td>
+    </tr>
+    <tr>
+      <th>Vitek Vanecek</th>
+      <th>NJD</th>
+      <td>2022-23</td>
+      <td>52</td>
+      <td>6</td>
+      <td>4</td>
+      <td>6</td>
+      <td>7</td>
+      <td>29</td>
+    </tr>
+    <tr>
+      <th>Yaroslav Askarov</th>
+      <th>NSH</th>
+      <td>2022-23</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
